@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Owner extends Thread{
@@ -19,22 +18,26 @@ public class Owner extends Thread{
 
     @Override
     public void run() {
+        int daysPassed = 6;
         while (true) {
-            //TODO SLEEP
-            readAndFillInDB();
-            printMeatOwnShopSold();
-            printNumberOfSales();
-            printTotalPleskavitsi();
-            printAllShopsAndSales();
-            printMostSoldGarnish();
-            printPalnozarnestBreadSold();
-            printTheLeastGarnishOwnShopSold();
-            printUsedKilosGarnishOwnShop();
-            earningsOwnShop();
-
-
-
-
+            try {
+                Thread.sleep(240000); //for 24 hours include more millis
+                readAndFillInDB();
+                daysPassed++;
+                if(daysPassed%7==0){
+                    printMeatOwnShopSold();
+                    printNumberOfSales();
+                    printTotalLargeMeatBalls();
+                    printAllShopsAndSales();
+                    printMostSoldGarnish();
+                    printWholeGrainBreadSold();
+                    printTheLeastGarnishOwnShopSold();
+                    printUsedKilosGarnishOwnShop();
+                    earningsOwnShop();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -44,48 +47,10 @@ public class Owner extends Thread{
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine();
                 String [] items = line.split(", ");
-//                ps.println(breadType+", "+meatType+", "+ garnituraType+", "+amountOfOrder+", "+ LocalDateTime.now());
-                String breadType = items[0];
-                String meatType = items[1];
-                String garrnituraType = items[2];
-                double price = Double.parseDouble(items[3]);
-                String time = items[4];
-                int bread = 2;
-                int meat = 0;
-                int garnitura = 0;
-                if(breadType.equals("White")){
-                    bread =1;
-                }
-                switch (meatType){
-                    case "Steak":
-                        meat = 3;
-                        break;
-                    case "Pleskavitsa":
-                        meat = 2;
-                        break;
-                    default:
-                        meat = 1;
-                        break;
-                }
-                switch (garrnituraType){
-                    case "Lyutenitsa":
-                        garnitura = 2;
-                        break;
-                    case "SnowWhite":
-                        garnitura = 3;
-                        break;
-                    case "CabbageCarrots":
-                        garnitura = 4;
-                        break;
-                    case "TomatoesCucumbers":
-                        garnitura = 5;
-                        break;
-                    default:
-                        garnitura = 1;
-                        break;
-
-                }
-                insertQuery(bread,meat,garnitura);
+                int breadType = Integer.parseInt(items[0]);
+                int meatType = Integer.parseInt(items[2]);
+                int garnishType = Integer.parseInt(items[4]);
+                insertQuery(breadType,meatType,garnishType);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -93,16 +58,17 @@ public class Owner extends Thread{
         file.delete();
     }
 
-    private void insertQuery(int bread, int meat, int garnitura){
-        String inputQuery = "INSERT INTO sales(shop_id, bread_type_id, meat_type_id, garnish_type_id, date_created) VALUES (?,?,?,?,?);";
+    private void insertQuery(int bread, int meat, int garnish){
+        String inputQuery = "INSERT INTO sales (shop_id, bread_type_id, meat_type_id, garnish_type_id, date_created) VALUES (?,?,?,?,?);";
         Connection connection = DBConnector.getInstance().getConnection();
         try(PreparedStatement preparedStatement = connection.prepareStatement(inputQuery)) {
             preparedStatement.setInt(1,26);
             preparedStatement.setInt(2,bread);
             preparedStatement.setInt(3,meat);
-            preparedStatement.setInt(4,garnitura);
+            preparedStatement.setInt(4,garnish);
             preparedStatement.setDate(5, Date.valueOf(LocalDate.now()));
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
+            System.out.println("Import successful!");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -119,13 +85,13 @@ public class Owner extends Thread{
         }
     }
 
-    private void printTotalPleskavitsi(){
+    private void printTotalLargeMeatBalls(){
         String selectQuery = "SELECT COUNT(meat_type_id) FROM sales WHERE meat_type_id = 2;";
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
             rs.next();
-            System.out.println("Total sales of pleskavitsi in all barbeque shops: "+rs.getInt(1));
+            System.out.println("Total sales of large meatballs in all barbeque shops: "+rs.getInt(1));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -150,7 +116,6 @@ public class Owner extends Thread{
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
-
             while(rs.next()){
                 System.out.println("Garnish: "+rs.getString(1)+" sales: "+rs.getInt(2));
             }
@@ -160,11 +125,12 @@ public class Owner extends Thread{
         }
     }
 
-    private void printPalnozarnestBreadSold(){
+    private void printWholeGrainBreadSold(){
         String selectQuery = "SELECT b.name, COUNT(s.bread_type_id) AS number_bread FROM bread_types b LEFT JOIN sales s ON s.bread_type_id = b.id GROUP BY b.id HAVING b.id = 2;";
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
+            rs.next();
             System.out.println("Sales of "+rs.getString(1)+": "+rs.getInt(2)+" pieces!");
 
         } catch (SQLException throwables) {
@@ -177,6 +143,7 @@ public class Owner extends Thread{
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
+            rs.next();
             System.out.println("Most sold meat is: "+rs.getString(1)+": "+rs.getInt(2)+" pieces!");
 
         } catch (SQLException throwables) {
@@ -189,6 +156,7 @@ public class Owner extends Thread{
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
+            rs.next();
             System.out.println("The least sold garnish is: "+rs.getString(1)+": "+rs.getInt(2)+" pieces!");
 
         } catch (SQLException throwables) {
@@ -201,6 +169,7 @@ public class Owner extends Thread{
         Connection connection = DBConnector.getInstance().getConnection();
         try(Statement st = connection.createStatement()){
             ResultSet rs = st.executeQuery(selectQuery);
+            rs.next();
             System.out.println("The total kilos of used garnish is: "+rs.getString(1)+": "+rs.getInt(2)+" kilos!");
 
         } catch (SQLException throwables) {
@@ -230,7 +199,7 @@ public class Owner extends Thread{
                 turnover+=rs3.getInt(2)*rs3.getDouble(2);
             }
             connection.commit();
-            System.out.println("Total earnigs for shop 26: "+turnover);
+            System.out.println("Total earnings for shop 26: "+turnover);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

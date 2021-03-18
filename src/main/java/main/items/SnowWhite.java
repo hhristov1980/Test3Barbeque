@@ -1,6 +1,6 @@
 package main.items;
 
-public class SnowWhite extends Garnitura{
+public class SnowWhite extends Garnish {
     @Override
     protected String validateName() {
         return "SnowWhite";

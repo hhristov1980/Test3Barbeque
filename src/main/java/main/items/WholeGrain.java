@@ -1,9 +1,9 @@
 package main.items;
 
-public class Palnzurnest extends Bread{
+public class WholeGrain extends Bread{
     @Override
     protected String validateName() {
-        return "Palnozurnest";
+        return "WholeGrain";
     }
 
     @Override

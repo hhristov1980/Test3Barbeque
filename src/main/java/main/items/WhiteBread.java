@@ -1,23 +1,23 @@
 package main.items;
 
-public class Pleskavitsa extends Meat{
+public class WhiteBread extends Bread{
     @Override
     protected String validateName() {
-        return "Pleskavitsa";
+        return "WhiteBread";
     }
 
     @Override
     protected Double validatePrice() {
-        return 2.0;
+        return 0.9;
     }
 
     @Override
     protected int validateTime() {
-        return 3;
+        return 2;
     }
 
     @Override
     protected int validateId() {
-        return 2;
+        return 1;
     }
 }

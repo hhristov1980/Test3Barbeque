@@ -14,7 +14,7 @@ public class Seller extends Worker{
 
     @Override
     public void run() {
-        File file = new File("Report "+ LocalDate.now()+".txt");
+        File file = new File("Report "+ LocalDate.now()+".txt"); //TODO to be fixed for everyday file creation
         try(PrintStream ps = new PrintStream(file)){
             while (true){
                 barbeque.makePortionsAndFillArchive(this, ps);

@@ -1,9 +1,8 @@
 package main.worker;
 
 import main.barbeque.Barbeque;
-import main.items.Meat;
 import main.items.MeatBall;
-import main.items.Pleskavitsa;
+import main.items.LargeMeatBall;
 import main.items.Steak;
 import main.util.Randomizer;
 
@@ -19,8 +18,10 @@ public class BarbequeMaker extends Worker{
                 make();
             }
             barbeque.putMeatIn(this);
+            System.out.println("Prepared "+item.getName());
             try {
                 Thread.sleep(item.getTimeToPrepare()*1000);
+                item = null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -58,16 +59,16 @@ public class BarbequeMaker extends Worker{
                 }
                 break;
             case 3:
-                if(barbeque.getMeats().contains("Pleskavitsa")){
-                    if(barbeque.getMeats().get("Pleskavitsa").size()<20){
-                        item = new Pleskavitsa();
+                if(barbeque.getMeats().contains("LargeMeatBall")){
+                    if(barbeque.getMeats().get("LargeMeatBall").size()<20){
+                        item = new LargeMeatBall();
                     }
                     else {
                         System.out.println("No space");
                     }
                 }
                 else {
-                    item = new Pleskavitsa();
+                    item = new LargeMeatBall();
                 }
                 break;
         }

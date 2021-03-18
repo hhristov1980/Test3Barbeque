@@ -7,19 +7,19 @@ public class Order {
     private static int uniqueId = 1;
     private String meatChoice;
     private String breadChoice;
-    private String garnituraChoice;
+    private String garnishChoice;
     private int orderId;
     private Client client;
 
-    public Order (String meatChoice, String breadChoice, String garnituraChoice, Client client){
+    public Order (String meatChoice, String breadChoice, String garnishChoice, Client client){
         if(meatChoice.length()>0){
             this.meatChoice = meatChoice;
         }
         if(breadChoice.length()>0){
-            this.meatChoice = meatChoice;
+            this.breadChoice = breadChoice;
         }
-        if(garnituraChoice.length()>0){
-            this.garnituraChoice = garnituraChoice;
+        if(garnishChoice.length()>0){
+            this.garnishChoice = garnishChoice;
         }
         orderId = uniqueId++;
         this.client = client;
@@ -31,12 +31,12 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return orderId == order.orderId && Objects.equals(meatChoice, order.meatChoice) && Objects.equals(breadChoice, order.breadChoice) && Objects.equals(garnituraChoice, order.garnituraChoice);
+        return orderId == order.orderId && Objects.equals(meatChoice, order.meatChoice) && Objects.equals(breadChoice, order.breadChoice) && Objects.equals(garnishChoice, order.garnishChoice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(meatChoice, breadChoice, garnituraChoice, orderId);
+        return Objects.hash(meatChoice, breadChoice, garnishChoice, orderId);
     }
 
     public String getMeatChoice() {
@@ -47,8 +47,8 @@ public class Order {
         return breadChoice;
     }
 
-    public String getGarnituraChoice() {
-        return garnituraChoice;
+    public String getGarnishChoice() {
+        return garnishChoice;
     }
 
     public int getOrderId() {

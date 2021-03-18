@@ -1,6 +1,6 @@
 package main.items;
 
-public class CabbageCarrots extends Garnitura{
+public class CabbageCarrots extends Garnish {
     @Override
     protected String validateName() {
         return "CabbageCarrots";

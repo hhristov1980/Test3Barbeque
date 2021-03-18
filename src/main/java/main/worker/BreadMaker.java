@@ -16,8 +16,10 @@ public class BreadMaker extends Worker{
                 make();
             }
             barbeque.putBreadIn(this);
+            System.out.println("Prepared "+item.getName());
             try {
                 Thread.sleep(item.getTimeToPrepare()*1000);
+                item = null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -29,29 +31,29 @@ public class BreadMaker extends Worker{
         int option = Randomizer.getRandomInt(1,2);
         switch (option){
             case 1:
-                if(barbeque.getBreads().contains("White")){
-                    if(barbeque.getBreads().get("White").size()<30){
-                        item = new White();
+                if(barbeque.getBreads().contains("WhiteBread")){
+                    if(barbeque.getBreads().get("WhiteBread").size()<30){
+                        item = new WhiteBread();
                     }
                     else {
                         System.out.println("No space");
                     }
                 }
                 else {
-                    item = new White();
+                    item = new WhiteBread();
                 }
                 break;
             case 2:
-                if(barbeque.getBreads().contains("Palnozarnest")){
-                    if(barbeque.getBreads().get("Palnozarnest").size()<30){
-                        item = new Palnzurnest();
+                if(barbeque.getBreads().contains("WholeGrain")){
+                    if(barbeque.getBreads().get("WholeGrain").size()<30){
+                        item = new WholeGrain();
                     }
                     else {
                         System.out.println("No space");
                     }
                 }
                 else {
-                    item = new Palnzurnest();
+                    item = new WholeGrain();
                 }
                 break;
 

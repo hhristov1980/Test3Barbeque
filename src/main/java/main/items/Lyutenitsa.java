@@ -1,6 +1,6 @@
 package main.items;
 
-public class Lyutenitsa extends Garnitura{
+public class Lyutenitsa extends Garnish {
     @Override
     protected String validateName() {
         return "Lyutenitsa";

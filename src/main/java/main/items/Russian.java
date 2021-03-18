@@ -1,6 +1,6 @@
 package main.items;
 
-public class Russian extends Garnitura{
+public class Russian extends Garnish {
     @Override
     protected String validateName() {
         return "Russian";
